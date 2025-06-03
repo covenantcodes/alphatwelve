@@ -7,7 +7,6 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Animated,
 } from "react-native";
 import { useNavigation, RouteProp } from "@react-navigation/native";
@@ -34,6 +33,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
+  const slideAnim = useState(new Animated.Value(-50))[0]; // Change from 50 to -50
 
   // Get the productId from route params
   const productId = route.params.productId;
@@ -49,35 +49,58 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   // Toggle favorite status
   const toggleFavorite = () => {
     setIsFavorite((prev) => !prev);
-    // Here you would typically update your app's state or make an API call
     console.log(`Product ${productId} favorite status: ${!isFavorite}`);
   };
 
-  // Add to cart functionality
-  const handleAddToCart = () => {
-    // Here you would typically update your cart state in a global state manager
-    // like Redux or Context API. For this example, we'll just show a toast.
-    console.log(`Adding product ${productId} to cart`);
-
-    // Show the toast notification
-    setShowToast(true);
-
-    // Animation for the toast
-    Animated.sequence([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.delay(2000), // Toast display duration
+  // Dismiss toast manually
+  const dismissToast = () => {
+    Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 300,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: -150,
+        duration: 200,
         useNativeDriver: true,
       }),
     ]).start(() => {
       setShowToast(false);
     });
+  };
+
+  // Add to cart functionality
+  const handleAddToCart = () => {
+    console.log(`Adding product ${productId} to cart`);
+
+    // Show the toast notification
+    setShowToast(true);
+
+    // Reset animation values
+    fadeAnim.setValue(0);
+    slideAnim.setValue(-50); // Change from 50 to -50
+
+    // Animation for the toast
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Auto dismiss after 4 seconds
+    setTimeout(() => {
+      if (showToast) {
+        dismissToast();
+      }
+    }, 4000);
   };
 
   return (
@@ -103,7 +126,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
             ]}
             onPress={toggleFavorite}
           >
-            {/* Use AntDesign heart icons that automatically fill */}
             <AntDesign
               name={isFavorite ? "heart" : "hearto"}
               size={20}
@@ -145,12 +167,30 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Custom Toast Notification */}
+      {/* Improved Toast Notification */}
       {showToast && (
-        <Animated.View style={[styles.toast, { opacity: fadeAnim }]}>
+        <Animated.View
+          style={[
+            styles.toast,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          <View style={styles.toastAccent} />
           <View style={styles.toastContent}>
-            <AntDesign name="checkcircleo" size={20} color={colors.white} />
-            <Text style={styles.toastText}>Added to cart!</Text>
+            <View style={styles.toastIconContainer}>
+              <AntDesign
+                name="checkcircleo"
+                size={22}
+                color={colors.greenLight}
+              />
+            </View>
+            <Text style={styles.toastText}>Item has been added to cart</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={dismissToast}>
+              <AntDesign name="close" size={18} color={colors.gray2} />
+            </TouchableOpacity>
           </View>
         </Animated.View>
       )}
@@ -260,29 +300,48 @@ const styles = StyleSheet.create({
     fontSize: FONTSIZE.md,
     color: colors.white,
   },
+
+  // New improved toast styles
   toast: {
     position: "absolute",
-    bottom: 90,
-    alignSelf: "center",
-    backgroundColor: colors.green,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
+    top: 100,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    backgroundColor: colors.white,
+    borderRadius: 12,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
     elevation: 4,
+    overflow: "hidden",
+    zIndex: 1000, // Add zIndex to ensure it appears above other elements
+  },
+  toastAccent: {
+    width: 6,
+    backgroundColor: colors.greenLight,
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
   },
   toastContent: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  toastIconContainer: {
+    marginRight: 12,
   },
   toastText: {
-    fontFamily: FONTFAMILY.semibold,
+    flex: 1,
+    fontFamily: FONTFAMILY.medium,
     fontSize: FONTSIZE.sm,
-    color: colors.white,
-    marginLeft: 8,
+    color: colors.gray2,
+  },
+  closeButton: {
+    padding: 4,
   },
 });
 
