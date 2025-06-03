@@ -6,9 +6,19 @@ import Header from "../../components/Header";
 import ProductCard from "../../components/ProductCard";
 import { products } from "../../data/data";
 import { FlashList } from "@shopify/flash-list";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../utils/types";
+
+// Create a typed navigation prop
+type HomeScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "MainTabs"
+>;
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const navigation = useNavigation<HomeScreenNavigationProp>();
 
   const handleSearch = (text: string) => {
     setSearchQuery(text);
@@ -17,6 +27,12 @@ const Home = () => {
   const handleBackAction = () => {
     // Handle back action here
     console.log("Back button pressed");
+  };
+
+  // Fix: Create a function that accepts productId as a parameter
+  const handleProductPress = (productId: string) => {
+    console.log("Product ID:", productId);
+    navigation.navigate("ProductDetails", { productId });
   };
 
   const categoryTitle = "Smartphones, Laptops & Accessories";
@@ -45,9 +61,11 @@ const Home = () => {
             data={products}
             renderItem={({ item }) => (
               <ProductCard
+                id={item.id}
                 image={item.image}
                 name={item.name}
                 price={item.price}
+                handlePress={() => handleProductPress(item.id)} // Pass the specific product ID
               />
             )}
             estimatedItemSize={240}

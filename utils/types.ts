@@ -1,3 +1,5 @@
+    
+import { ImageSourcePropType } from 'react-native';
 export interface UserData {
   id: string;
   name: string;
@@ -13,3 +15,16 @@ export interface UserData {
   profileImage?: string;
 }
 
+export type RootStackParamList = {
+  MainTabs: undefined;
+  ProductDetails: { productId: string };
+};
+
+
+export interface ProductCardProps {
+  id: string;
+  image: ImageSourcePropType;
+  name: string;
+  price: number;
+  handlePress: () => void;
+}

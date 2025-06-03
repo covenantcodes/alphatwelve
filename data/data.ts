@@ -22,7 +22,7 @@ export const products = [
       image: images.iphone, // Make sure to add these images
       name: "Apple iPhone 16 128GB|Teal",
       details: " This pre-owned product is not Apple certified, but has been professionally inspected, tested and cleaned by Amazon-qualified suppliers. There will be no visible cosmetic imperfections when held at an arm’s length. There will be no visible cosmetic imperfections when held at an arm’s length. This product will have a battery which exceeds 80% capacity relative to new.  Accessories will not be original, but will be compatible and fully functional. Product may come in generic Box. This product is eligible for a replacement or refund within 90 days of receipt if you are not satisfied.",
-      price: 7000.00
+      price: 700.00
     },
     {
       id: '2',

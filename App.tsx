@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 import { FONTFAMILY } from "./utils/font";
 import { NavigationContainer } from "@react-navigation/native";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
+import AppNavigator from "./navigation/AppNavigator";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -30,7 +31,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      <BottomTabNavigator />
+      <AppNavigator />
     </NavigationContainer>
   );
 }

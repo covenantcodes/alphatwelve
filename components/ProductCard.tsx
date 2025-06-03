@@ -1,23 +1,17 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ImageSourcePropType,
-} from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../utils/font";
 import colors from "../utils/colors";
+import { ProductCardProps } from "../utils/types";
 
-interface ProductCardProps {
-  image: ImageSourcePropType;
-  name: string;
-  price: number;
-}
-
-const ProductCard: React.FC<ProductCardProps> = ({ image, name, price }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  image,
+  name,
+  price,
+  handlePress,
+}) => {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={handlePress}>
       {/* Product Image */}
       <View style={styles.imageContainer}>
         <Image source={image} style={styles.image} resizeMode="contain" />
@@ -30,7 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ image, name, price }) => {
         </Text>
         <Text style={styles.price}>${price.toFixed(2)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
