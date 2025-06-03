@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, SafeAreaView } from "react-native";
-import { FONTFAMILY } from "../utils/font";
+import { FONTFAMILY, FONTSIZE } from "../utils/font";
 import colors from "../utils/colors";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
@@ -16,6 +16,10 @@ const Home = () => {
     // Handle back action here
     console.log("Back button pressed");
   };
+
+  const categoryTitle = "Smartphones, Laptops & Accessories";
+  const [firstPart, secondPart] = categoryTitle.split(" & ");
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header
@@ -29,7 +33,8 @@ const Home = () => {
       <View style={styles.container}>
         <View style={styles.categoryTitle}>
           <Text style={styles.categoryTitleText}>
-            Smartphones, Laptops & Accessories
+            {firstPart} &{"\n"}
+            {secondPart}
           </Text>
         </View>
       </View>
@@ -56,7 +61,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   categoryTitleText: {
-    fontFamily: FONTFAMILY.medium,
+    fontFamily: FONTFAMILY.special,
+    fontSize: FONTSIZE.lg,
   },
 });
 
