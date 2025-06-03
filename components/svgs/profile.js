@@ -20,7 +20,7 @@ function Profile({ width, height, color, ...props }) {
       />
       <Path
         d="M7.5 17c2.332-2.442 6.643-2.557 9 0m-2.005-7.5a2.502 2.502 0 01-3.46 2.31A2.502 2.502 0 019.487 9.5a2.502 2.502 0 013.462-2.31 2.5 2.5 0 011.545 2.31z"
-        stroke="#000"
+        stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"

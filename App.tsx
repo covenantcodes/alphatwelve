@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { FONTFAMILY } from "./utils/font";
+import { NavigationContainer } from "@react-navigation/native";
+import BottomTabNavigator from "./navigation/BottomTabNavigator";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,20 +28,9 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontFamily: FONTFAMILY.bold }}>
-        Open up App.tsx to start working on your app!
-      </Text>
+    <NavigationContainer>
       <StatusBar style="auto" />
-    </View>
+      <BottomTabNavigator />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

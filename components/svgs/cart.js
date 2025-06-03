@@ -20,7 +20,7 @@ function Cart({ width, height, color, ...props }) {
       />
       <Path
         d="M8 16L5.379 3.515A2 2 0 003.439 2H2.5m6.38 14h-.411C7.105 16 6 17.151 6 18.571a.42.42 0 00.411.429H17.5M10.5 22a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17.5 22a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-        stroke="#000"
+        stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"
