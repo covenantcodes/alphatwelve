@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,13 +7,15 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
+  Animated,
 } from "react-native";
 import { useNavigation, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { FONTFAMILY, FONTSIZE } from "../../utils/font";
 import colors from "../../utils/colors";
 import Header from "../../components/Header";
-import Favorites from "../../components/svgs/favorites";
+import { AntDesign } from "@expo/vector-icons";
 import { products } from "../../data/data";
 import { RootStackParamList } from "../../utils/types";
 
@@ -29,6 +31,9 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   const navigation = useNavigation<ProductDetailsNavigationProp>();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const fadeAnim = useState(new Animated.Value(0))[0];
 
   // Get the productId from route params
   const productId = route.params.productId;
@@ -36,8 +41,43 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   // Find the selected product from data
   const product = products.find((p) => p.id === productId) || products[0];
 
+  // Handle back navigation
   const handleBackAction = () => {
     navigation.goBack();
+  };
+
+  // Toggle favorite status
+  const toggleFavorite = () => {
+    setIsFavorite((prev) => !prev);
+    // Here you would typically update your app's state or make an API call
+    console.log(`Product ${productId} favorite status: ${!isFavorite}`);
+  };
+
+  // Add to cart functionality
+  const handleAddToCart = () => {
+    // Here you would typically update your cart state in a global state manager
+    // like Redux or Context API. For this example, we'll just show a toast.
+    console.log(`Adding product ${productId} to cart`);
+
+    // Show the toast notification
+    setShowToast(true);
+
+    // Animation for the toast
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.delay(2000), // Toast display duration
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setShowToast(false);
+    });
   };
 
   return (
@@ -56,8 +96,19 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
             style={styles.productImage}
             resizeMode="contain"
           />
-          <TouchableOpacity style={styles.favoriteButton}>
-            <Favorites width={20} height={20} color={colors.gray2} />
+          <TouchableOpacity
+            style={[
+              styles.favoriteButton,
+              isFavorite && styles.favoriteButtonActive,
+            ]}
+            onPress={toggleFavorite}
+          >
+            {/* Use AntDesign heart icons that automatically fill */}
+            <AntDesign
+              name={isFavorite ? "heart" : "hearto"}
+              size={20}
+              color={isFavorite ? colors.red : colors.gray2}
+            />
           </TouchableOpacity>
         </View>
 
@@ -86,10 +137,23 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
 
       {/* Add to Cart Button */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.addToCartButton}>
+        <TouchableOpacity
+          style={styles.addToCartButton}
+          onPress={handleAddToCart}
+        >
           <Text style={styles.buttonText}>Add to cart</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Custom Toast Notification */}
+      {showToast && (
+        <Animated.View style={[styles.toast, { opacity: fadeAnim }]}>
+          <View style={styles.toastContent}>
+            <AntDesign name="checkcircleo" size={20} color={colors.white} />
+            <Text style={styles.toastText}>Added to cart!</Text>
+          </View>
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 };
@@ -131,6 +195,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  favoriteButtonActive: {
+    backgroundColor: colors.white,
+    shadowOpacity: 0.2,
+  },
   detailsContainer: {
     padding: 16,
   },
@@ -144,10 +212,10 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.bold,
     fontSize: FONTSIZE.xl,
     color: colors.black,
-    marginBottom: 24,
+    marginBottom: 15,
   },
   descriptionContainer: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   descriptionTitle: {
     fontFamily: FONTFAMILY.regular,
@@ -191,6 +259,30 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.bold,
     fontSize: FONTSIZE.md,
     color: colors.white,
+  },
+  toast: {
+    position: "absolute",
+    bottom: 90,
+    alignSelf: "center",
+    backgroundColor: colors.green,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  toastContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  toastText: {
+    fontFamily: FONTFAMILY.semibold,
+    fontSize: FONTSIZE.sm,
+    color: colors.white,
+    marginLeft: 8,
   },
 });
 
