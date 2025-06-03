@@ -63,13 +63,12 @@ const Header: React.FC<HeaderProps> = ({
       {/* Action Container with caret and title */}
       {showActionContainer && (
         <View style={styles.actionContainerWrapper}>
-          <TouchableOpacity
-            style={styles.actionContainer}
-            onPress={onActionPress}
-          >
-            <CaretLeft width={15} height={15} color={colors.gray2} />
+          <View style={styles.actionContainer}>
+            <TouchableOpacity onPress={onActionPress}>
+              <CaretLeft width={15} height={15} color={colors.gray2} />
+            </TouchableOpacity>
             <Text style={styles.actionTitle}>{actionTitle}</Text>
-          </TouchableOpacity>
+          </View>
         </View>
       )}
     </View>

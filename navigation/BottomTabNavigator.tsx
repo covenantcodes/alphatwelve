@@ -1,10 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text, StyleSheet } from "react-native";
 
-import HomeScreen from "../screens/Home";
-import CartScreen from "../screens/Cart";
-import FavoritesScreen from "../screens/Favorites";
-import ProfileScreen from "../screens/Profile";
+import HomeScreen from "../screens/Home/Home";
+import CartScreen from "../screens/Cart/Cart";
+import FavoritesScreen from "../screens/Favorites/Favorites";
+import ProfileScreen from "../screens/Profile/Profile";
 
 import Home from "../components/svgs/home";
 import Cart from "../components/svgs/cart";

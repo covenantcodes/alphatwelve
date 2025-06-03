@@ -12,16 +12,10 @@ import colors from "../utils/colors";
 interface ProductCardProps {
   image: ImageSourcePropType;
   name: string;
-  details: string;
   price: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  image,
-  name,
-  details,
-  price,
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ image, name, price }) => {
   return (
     <View style={styles.card}>
       {/* Product Image */}
@@ -34,7 +28,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Text style={styles.name} numberOfLines={2}>
           {name}
         </Text>
-        {/* <Text style={styles.details} numberOfLines={1}>{details}</Text> */}
         <Text style={styles.price}>${price.toFixed(2)}</Text>
       </View>
     </View>
@@ -44,18 +37,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     width: 170,
-    height: 240,
-    backgroundColor: colors.white,
+    height: 220,
+    // backgroundColor: colors.white,
     borderRadius: 12,
     overflow: "hidden",
     marginBottom: 16,
     marginHorizontal: 8,
     flexDirection: "column",
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    // elevation: 2,
   },
   imageContainer: {
     height: 140,
@@ -64,6 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray5,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 12,
   },
   image: {
     width: "100%",
@@ -75,15 +65,10 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: FONTFAMILY.regular,
     fontSize: FONTSIZE.sm,
-    color: colors.gray2,
+    color: colors.black,
     marginBottom: 4,
   },
-  details: {
-    fontFamily: FONTFAMILY.regular,
-    fontSize: FONTSIZE.xs,
-    color: colors.gray4,
-    marginBottom: 8,
-  },
+
   price: {
     fontFamily: FONTFAMILY.bold,
     fontSize: FONTSIZE.md,
