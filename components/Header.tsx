@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../utils/font";
 import colors from "../utils/colors";
 import images from "../utils/images";
 import Bell from "./svgs/bell";
+import CaretLeft from "./svgs/caretLeft";
 import { userData } from "../data/data";
 import SearchBar from "./SearchBar";
 
@@ -12,6 +13,9 @@ interface HeaderProps {
   searchBarShow?: boolean;
   onSearchChange?: (text: string) => void;
   searchPlaceholder?: string;
+  showActionContainer?: boolean;
+  actionTitle?: string;
+  onActionPress?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -19,6 +23,9 @@ const Header: React.FC<HeaderProps> = ({
   searchBarShow = false,
   onSearchChange,
   searchPlaceholder = "Search...",
+  showActionContainer = false,
+  actionTitle = "Action Title",
+  onActionPress,
 }) => {
   const address = userData.address.fullAddress;
   return (
@@ -36,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({
         {/* Center Section - Delivery Address */}
         <View style={styles.addressContainer}>
           <Text style={styles.addressLabel}>DELIVERY ADDRESS</Text>
-          <Text style={styles.addressText}>{customAddress || address}</Text>
+          <Text style={styles.addressText}>{address}</Text>
         </View>
 
         {/* Right Section - Bell Icon */}
@@ -51,6 +58,19 @@ const Header: React.FC<HeaderProps> = ({
           placeholder={searchPlaceholder}
           onChangeText={onSearchChange}
         />
+      )}
+
+      {/* Action Container with caret and title */}
+      {showActionContainer && (
+        <View style={styles.actionContainerWrapper}>
+          <TouchableOpacity
+            style={styles.actionContainer}
+            onPress={onActionPress}
+          >
+            <CaretLeft width={15} height={15} color={colors.gray2} />
+            <Text style={styles.actionTitle}>{actionTitle}</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -95,6 +115,22 @@ const styles = StyleSheet.create({
   iconContainer: {
     flex: 1,
     alignItems: "flex-end",
+  },
+  actionContainerWrapper: {
+    borderWidth: 1,
+    borderColor: colors.gray,
+  },
+  actionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  actionTitle: {
+    fontFamily: FONTFAMILY.bold,
+    fontSize: FONTSIZE.md,
+    color: colors.black,
+    marginLeft: 10,
   },
 });
 

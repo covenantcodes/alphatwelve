@@ -11,15 +11,27 @@ const Home = () => {
   const handleSearch = (text: string) => {
     setSearchQuery(text);
   };
+
+  const handleBackAction = () => {
+    // Handle back action here
+    console.log("Back button pressed");
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header
-        searchBarShow={false}
+        searchBarShow={true}
         onSearchChange={handleSearch}
         searchPlaceholder="Search..."
+        showActionContainer={true}
+        actionTitle="Technology"
+        onActionPress={handleBackAction}
       />
       <View style={styles.container}>
-        <Text style={styles.text}>Home Screen</Text>
+        <View style={styles.categoryTitle}>
+          <Text style={styles.categoryTitleText}>
+            Smartphones, Laptops & Accessories
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -38,11 +50,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
   },
-  text: {
+  categoryTitle: {
+    padding: 10,
+  },
+  categoryTitleText: {
     fontFamily: FONTFAMILY.medium,
   },
 });
