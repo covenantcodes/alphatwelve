@@ -74,7 +74,7 @@ const CartCard: React.FC<CartCardProps> = ({
               <Minus
                 width={16}
                 height={16}
-                color={quantity > 1 ? colors.white : colors.gray3}
+                color={quantity > 1 ? colors.gray1 : colors.gray1}
               />
             </TouchableOpacity>
 
@@ -90,7 +90,7 @@ const CartCard: React.FC<CartCardProps> = ({
 
           {/* Delete Button */}
           <TouchableOpacity style={styles.deleteButton} onPress={handleRemove}>
-            <Delete width={18} height={18} color={colors.red} />
+            <Delete width={18} height={18} color={colors.gray6} />
           </TouchableOpacity>
         </View>
       </View>
@@ -101,7 +101,7 @@ const CartCard: React.FC<CartCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    backgroundColor: colors.gray5,
+    backgroundColor: colors.gray8,
     borderRadius: 16,
     padding: 12,
     marginVertical: 8,
@@ -109,9 +109,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    width: 90,
-    height: 90,
-    backgroundColor: colors.white,
+    width: 120,
+    height: 120,
     borderRadius: 10,
     padding: 10,
     marginRight: 14,
@@ -127,22 +126,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   productName: {
-    fontFamily: FONTFAMILY.medium,
+    fontFamily: FONTFAMILY.regular,
     fontSize: FONTSIZE.sm,
     color: colors.gray2,
     marginBottom: 4,
   },
   productPrice: {
-    fontFamily: FONTFAMILY.bold,
-    fontSize: FONTSIZE.md,
+    fontFamily: FONTFAMILY.medium,
+    fontSize: FONTSIZE.lg,
     color: colors.black,
-    marginBottom: 4,
+    marginVertical: 4,
   },
   stockStatus: {
-    fontFamily: FONTFAMILY.medium,
+    fontFamily: FONTFAMILY.regular,
     fontSize: FONTSIZE.xs,
-    color: colors.green,
-    marginBottom: 8,
+    color: colors.greenLight,
+    marginVertical: 6,
   },
   actionsRow: {
     flexDirection: "row",
@@ -154,20 +153,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   decrementButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.gray2,
+    width: 38,
+    height: 38,
+    borderRadius: 20,
+    backgroundColor: colors.gray,
     justifyContent: "center",
     alignItems: "center",
   },
   incrementButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 38,
+    height: 38,
+    borderRadius: 20,
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.gray2,
+    borderColor: colors.gray,
     justifyContent: "center",
     alignItems: "center",
   },

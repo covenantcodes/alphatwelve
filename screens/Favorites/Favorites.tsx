@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: FONTFAMILY.bold,
-    fontSize: FONTSIZE.xl,
+    fontSize: FONTSIZE.md,
     color: colors.black,
   },
   emptyContainer: {

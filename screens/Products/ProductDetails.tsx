@@ -18,6 +18,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { products } from "../../data/data";
 import { RootStackParamList } from "../../utils/types";
 import { useFavorites } from "../../context/FavoritesContext";
+import { useCart } from "../../context/CartContext";
 
 type ProductDetailsRouteProp = RouteProp<RootStackParamList, "ProductDetails">;
 type ProductDetailsNavigationProp = StackNavigationProp<
@@ -37,6 +38,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
 
   // Use favorites context
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+  
+  // Use cart context
+  const { addToCart, getCartItemById } = useCart();
 
   // Get the productId from route params
   const productId = route.params.productId;
@@ -96,13 +100,21 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   // Add to cart functionality
   const handleAddToCart = () => {
     console.log(`Adding product ${productId} to cart`);
+    
+    // Add the product to cart using CartContext
+    addToCart({
+      id: product.id,
+      image: product.image,
+      name: product.name,
+      price: product.price,
+    });
 
     // Show the toast notification
     setShowToast(true);
 
     // Reset animation values
     fadeAnim.setValue(0);
-    slideAnim.setValue(-50); // Change from 50 to -50
+    slideAnim.setValue(-50);
 
     // Animation for the toast
     Animated.parallel([
