@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import AppNavigator from "./navigation/AppNavigator";
 import { FavoritesProvider } from "./context/FavoritesContext";
+import { CartProvider } from "./context/CartContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -30,11 +31,12 @@ export default function App() {
   }
 
   return (
-    <FavoritesProvider>
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <AppNavigator />
-      </NavigationContainer>
-    </FavoritesProvider>
+    <NavigationContainer>
+      <FavoritesProvider>
+        <CartProvider>
+          <AppNavigator />
+        </CartProvider>
+      </FavoritesProvider>
+    </NavigationContainer>
   );
 }

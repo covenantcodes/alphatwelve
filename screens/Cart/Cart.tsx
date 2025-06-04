@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../../utils/font";
 import colors from "../../utils/colors";
@@ -6,40 +6,23 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import CartCard from "../../components/CartCard";
-import { products } from "../../data/data";
 import { AntDesign } from "@expo/vector-icons";
-
-// Sample cart items - we'd typically get this from a cart context
-interface CartItem {
-  id: string;
-  image: any;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import { useCart } from "../../context/CartContext";
 
 const Cart = () => {
   const navigation = useNavigation();
-  const [cartItems, setCartItems] = useState<CartItem[]>(
-    // Initialize with some sample products (in a real app this would come from a cart context)
-    products.slice(0, 2).map((product) => ({
-      ...product,
-      quantity: 1,
-    }))
-  );
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
 
   const handleBackAction = () => {
     navigation.goBack();
   };
 
   const handleRemoveItem = (id: string) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    removeFromCart(id);
   };
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
-    setCartItems(
-      cartItems.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
+    updateQuantity(id, quantity);
   };
 
   const renderEmptyCart = () => (
@@ -74,6 +57,7 @@ const Cart = () => {
               price={item.price}
               onRemove={handleRemoveItem}
               onUpdateQuantity={handleUpdateQuantity}
+              quantity={item.quantity}
             />
           )}
           keyExtractor={(item) => item.id}

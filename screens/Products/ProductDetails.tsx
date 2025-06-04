@@ -36,9 +36,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   const fadeAnim = useState(new Animated.Value(0))[0];
   const slideAnim = useState(new Animated.Value(-50))[0];
 
+  // State to track if item is in cart
+  const [isInCart, setIsInCart] = useState(false);
+
   // Use favorites context
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  
+
   // Use cart context
   const { addToCart, getCartItemById } = useCart();
 
@@ -51,10 +54,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   // Check if this product is in favorites
   const [isFavorited, setIsFavorited] = useState(isFavorite(productId));
 
-  // Update local state when global favorites change
+  // Update local state when component mounts and when cart changes
   useEffect(() => {
+    // Check if item is already in cart
+    const cartItem = getCartItemById(productId);
+    setIsInCart(!!cartItem);
+
+    // Check favorite status
     setIsFavorited(isFavorite(productId));
-  }, [isFavorite, productId]);
+  }, [getCartItemById, productId, isFavorite]);
 
   // Handle back navigation
   const handleBackAction = () => {
@@ -100,7 +108,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   // Add to cart functionality
   const handleAddToCart = () => {
     console.log(`Adding product ${productId} to cart`);
-    
+
     // Add the product to cart using CartContext
     addToCart({
       id: product.id,
@@ -108,6 +116,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
       name: product.name,
       price: product.price,
     });
+
+    // Update the local state to indicate item is in cart
+    setIsInCart(true);
 
     // Show the toast notification
     setShowToast(true);
@@ -136,6 +147,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
         dismissToast();
       }
     }, 4000);
+  };
+
+  // Navigate to cart screen
+  const handleViewCart = () => {
+    // Using navigation we navigate to MainTabs screen with params to select Cart tab
+    (navigation as any).navigate("MainTabs", { screen: "Cart" });
   };
 
   return (
@@ -192,13 +209,20 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
         </View>
       </ScrollView>
 
-      {/* Add to Cart Button */}
+      {/* Add/View Cart Button */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={styles.addToCartButton}
-          onPress={handleAddToCart}
+          style={[styles.addToCartButton, isInCart && styles.viewCartButton]}
+          onPress={isInCart ? handleViewCart : handleAddToCart}
         >
-          <Text style={styles.buttonText}>Add to cart</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              isInCart && { color: colors.secondaryColor },
+            ]}
+          >
+            {isInCart ? "View cart" : "Add to cart"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -330,13 +354,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  viewCartButton: {
+    backgroundColor: colors.white,
+    borderColor: colors.secondaryColor,
+    borderWidth: 1.5,
+  },
   buttonText: {
     fontFamily: FONTFAMILY.bold,
     fontSize: FONTSIZE.md,
     color: colors.white,
   },
 
-  // New improved toast styles
+  // Toast styles
   toast: {
     position: "absolute",
     top: 100,
@@ -351,7 +380,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     overflow: "hidden",
-    zIndex: 1000, // Add zIndex to ensure it appears above other elements
+    zIndex: 1000,
   },
   toastAccent: {
     width: 6,

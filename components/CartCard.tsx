@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../utils/font";
 import colors from "../utils/colors";
@@ -11,6 +11,7 @@ interface CartCardProps {
   image: any;
   name: string;
   price: number;
+  quantity?: number; // Make it optional with a default value
   onRemove: (id: string) => void;
   onUpdateQuantity: (id: string, quantity: number) => void;
 }
@@ -20,21 +21,27 @@ const CartCard: React.FC<CartCardProps> = ({
   image,
   name,
   price,
+  quantity = 1, // Default to 1 if not provided
   onRemove,
   onUpdateQuantity,
 }) => {
-  const [quantity, setQuantity] = useState(1);
+  const [localQuantity, setLocalQuantity] = useState(quantity);
+
+  // Update local quantity when the prop changes
+  useEffect(() => {
+    setLocalQuantity(quantity);
+  }, [quantity]);
 
   const handleIncrement = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
+    const newQuantity = localQuantity + 1;
+    setLocalQuantity(newQuantity);
     onUpdateQuantity(id, newQuantity);
   };
 
   const handleDecrement = () => {
-    if (quantity > 1) {
-      const newQuantity = quantity - 1;
-      setQuantity(newQuantity);
+    if (localQuantity > 1) {
+      const newQuantity = localQuantity - 1;
+      setLocalQuantity(newQuantity);
       onUpdateQuantity(id, newQuantity);
     }
   };
@@ -69,16 +76,16 @@ const CartCard: React.FC<CartCardProps> = ({
             <TouchableOpacity
               style={styles.decrementButton}
               onPress={handleDecrement}
-              disabled={quantity <= 1}
+              disabled={localQuantity <= 1}
             >
               <Minus
                 width={16}
                 height={16}
-                color={quantity > 1 ? colors.gray1 : colors.gray1}
+                color={localQuantity > 1 ? colors.gray1 : colors.gray1}
               />
             </TouchableOpacity>
 
-            <Text style={styles.quantityText}>{quantity}</Text>
+            <Text style={styles.quantityText}>{localQuantity}</Text>
 
             <TouchableOpacity
               style={styles.incrementButton}
