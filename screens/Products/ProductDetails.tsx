@@ -17,6 +17,7 @@ import Header from "../../components/Header";
 import { AntDesign } from "@expo/vector-icons";
 import { products } from "../../data/data";
 import { RootStackParamList } from "../../utils/types";
+import { useFavorites } from "../../context/FavoritesContext";
 
 type ProductDetailsRouteProp = RouteProp<RootStackParamList, "ProductDetails">;
 type ProductDetailsNavigationProp = StackNavigationProp<
@@ -30,16 +31,26 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
   const navigation = useNavigation<ProductDetailsNavigationProp>();
-  const [isFavorite, setIsFavorite] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
-  const slideAnim = useState(new Animated.Value(-50))[0]; // Change from 50 to -50
+  const slideAnim = useState(new Animated.Value(-50))[0];
+
+  // Use favorites context
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
 
   // Get the productId from route params
   const productId = route.params.productId;
 
   // Find the selected product from data
   const product = products.find((p) => p.id === productId) || products[0];
+
+  // Check if this product is in favorites
+  const [isFavorited, setIsFavorited] = useState(isFavorite(productId));
+
+  // Update local state when global favorites change
+  useEffect(() => {
+    setIsFavorited(isFavorite(productId));
+  }, [isFavorite, productId]);
 
   // Handle back navigation
   const handleBackAction = () => {
@@ -48,8 +59,20 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
 
   // Toggle favorite status
   const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
-    console.log(`Product ${productId} favorite status: ${!isFavorite}`);
+    if (isFavorited) {
+      removeFromFavorites(productId);
+      console.log(`Removed product ${productId} from favorites`);
+    } else {
+      addToFavorites({
+        id: product.id,
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        details: product.details,
+      });
+      console.log(`Added product ${productId} to favorites`);
+    }
+    setIsFavorited(!isFavorited);
   };
 
   // Dismiss toast manually
@@ -122,14 +145,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
           <TouchableOpacity
             style={[
               styles.favoriteButton,
-              isFavorite && styles.favoriteButtonActive,
+              isFavorited && styles.favoriteButtonActive,
             ]}
             onPress={toggleFavorite}
           >
             <AntDesign
-              name={isFavorite ? "heart" : "hearto"}
+              name={isFavorited ? "heart" : "hearto"}
               size={20}
-              color={isFavorite ? colors.red : colors.gray2}
+              color={isFavorited ? colors.red : colors.gray2}
             />
           </TouchableOpacity>
         </View>

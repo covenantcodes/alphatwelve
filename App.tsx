@@ -6,6 +6,7 @@ import { FONTFAMILY } from "./utils/font";
 import { NavigationContainer } from "@react-navigation/native";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import AppNavigator from "./navigation/AppNavigator";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -29,9 +30,11 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <AppNavigator />
-    </NavigationContainer>
+    <FavoritesProvider>
+      <NavigationContainer>
+        <StatusBar style="auto" />
+        <AppNavigator />
+      </NavigationContainer>
+    </FavoritesProvider>
   );
 }
