@@ -1,5 +1,12 @@
-import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Animated,
+  Easing,
+} from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../../utils/font";
 import colors from "../../utils/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,19 +24,91 @@ const Cart = () => {
   const route = useRoute();
   const isStandaloneScreen = route.name === "CartStack";
 
+  // Animation values
+  const emptyCartOpacity = useRef(new Animated.Value(0)).current;
+  const emptyCartScale = useRef(new Animated.Value(0.8)).current;
+  const listItemAnimations = useRef(
+    cartItems.map(() => new Animated.Value(50))
+  ).current;
+  const fadeAnimations = useRef(
+    cartItems.map(() => new Animated.Value(0))
+  ).current;
+
+  // Run animations on component mount
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      // Empty cart animations
+      Animated.parallel([
+        Animated.timing(emptyCartOpacity, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.ease),
+        }),
+        Animated.timing(emptyCartScale, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.back(1.2)),
+        }),
+      ]).start();
+    } else {
+      // Animate cart items one after another
+      cartItems.forEach((_, index) => {
+        Animated.parallel([
+          Animated.timing(fadeAnimations[index], {
+            toValue: 1,
+            duration: 400,
+            delay: 100 + index * 100,
+            useNativeDriver: true,
+          }),
+          Animated.timing(listItemAnimations[index], {
+            toValue: 0,
+            duration: 400,
+            delay: 100 + index * 100,
+            useNativeDriver: true,
+            easing: Easing.out(Easing.ease),
+          }),
+        ]).start();
+      });
+    }
+  }, [cartItems.length]);
+
+  // Update animation references when cart items change
+  useEffect(() => {
+    // Reset animation values if needed
+    if (listItemAnimations.length !== cartItems.length) {
+      listItemAnimations.current = cartItems.map(() => new Animated.Value(50));
+      fadeAnimations.current = cartItems.map(() => new Animated.Value(0));
+    }
+  }, [cartItems]);
+
   const handleBackAction = () => {
     if (isStandaloneScreen) {
       // If standalone, go back to previous screen
       navigation.goBack();
     } else {
       // If in tab, do something else or nothing
-      // For example, you could navigate to the Home tab
       (navigation as any).navigate("MainTabs", { screen: "Home" });
     }
   };
 
   const handleRemoveItem = (id: string) => {
-    removeFromCart(id);
+    // Create a fade-out animation for the removed item
+    const itemIndex = cartItems.findIndex((item) => item.id === id);
+    if (itemIndex !== -1) {
+      Animated.timing(fadeAnimations[itemIndex], {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        // Once animation completes, remove from cart
+        removeFromCart(id);
+      });
+    } else {
+      // Fallback if animation cannot be created
+      removeFromCart(id);
+    }
   };
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
@@ -37,14 +116,47 @@ const Cart = () => {
   };
 
   const renderEmptyCart = () => (
-    <View style={styles.emptyContainer}>
-      <AntDesign name="shoppingcart" size={60} color={colors.gray3} />
-      <Text style={styles.emptyText}>Your cart is empty</Text>
-      <Text style={styles.emptySubtext}>
+    <Animated.View
+      style={[
+        styles.emptyContainer,
+        {
+          opacity: emptyCartOpacity,
+          transform: [{ scale: emptyCartScale }],
+        },
+      ]}
+    >
+      <Animated.View>
+        <AntDesign name="shoppingcart" size={60} color={colors.gray3} />
+      </Animated.View>
+
+      <Animated.Text style={styles.emptyText}>Your cart is empty</Animated.Text>
+
+      <Animated.Text style={styles.emptySubtext}>
         Items added to your cart will appear here
-      </Text>
-    </View>
+      </Animated.Text>
+    </Animated.View>
   );
+
+  const renderCartItem = ({ item, index }) => {
+    return (
+      <Animated.View
+        style={{
+          transform: [{ translateY: listItemAnimations[index] }],
+          opacity: fadeAnimations[index],
+        }}
+      >
+        <CartCard
+          id={item.id}
+          image={item.image}
+          name={item.name}
+          price={item.price}
+          onRemove={handleRemoveItem}
+          onUpdateQuantity={handleUpdateQuantity}
+          quantity={item.quantity}
+        />
+      </Animated.View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -60,17 +172,7 @@ const Cart = () => {
       ) : (
         <FlatList
           data={cartItems}
-          renderItem={({ item }) => (
-            <CartCard
-              id={item.id}
-              image={item.image}
-              name={item.name}
-              price={item.price}
-              onRemove={handleRemoveItem}
-              onUpdateQuantity={handleUpdateQuantity}
-              quantity={item.quantity}
-            />
-          )}
+          renderItem={renderCartItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
         />
