@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 
 import HomeScreen from "../screens/Home/Home";
 import CartScreen from "../screens/Cart/Cart";
@@ -35,7 +35,6 @@ const BottomTabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: true,
         tabBarStyle: styles.tabBar,
       }}
     >
@@ -178,6 +177,11 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: -3 },
     paddingTop: 10,
+    ...Platform.select({
+      android: {
+        overflow: "hidden", // This helps prevent ripple effect on Android
+      },
+    }),
   },
   tabIconContainer: {
     width: 70,

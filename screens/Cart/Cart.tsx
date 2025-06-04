@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../../utils/font";
 import colors from "../../utils/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import Header from "../../components/Header";
 import CartCard from "../../components/CartCard";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,8 +13,19 @@ const Cart = () => {
   const navigation = useNavigation();
   const { cartItems, removeFromCart, updateQuantity } = useCart();
 
+  // Determine if this cart is being shown as a stack screen
+  const route = useRoute();
+  const isStandaloneScreen = route.name === "CartStack";
+
   const handleBackAction = () => {
-    navigation.goBack();
+    if (isStandaloneScreen) {
+      // If standalone, go back to previous screen
+      navigation.goBack();
+    } else {
+      // If in tab, do something else or nothing
+      // For example, you could navigate to the Home tab
+      (navigation as any).navigate("MainTabs", { screen: "Home" });
+    }
   };
 
   const handleRemoveItem = (id: string) => {

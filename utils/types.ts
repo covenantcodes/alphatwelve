@@ -18,6 +18,7 @@ export interface UserData {
 export type RootStackParamList = {
   MainTabs: undefined;
   ProductDetails: { productId: string };
+  CartStack: undefined;
 };
 
 

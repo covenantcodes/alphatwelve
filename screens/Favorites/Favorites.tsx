@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../../utils/font";
 import colors from "../../utils/colors";
 import Header from "../../components/Header";
@@ -9,6 +9,8 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../utils/types";
 import { AntDesign } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { FlashList } from "@shopify/flash-list";
 
 type FavoritesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -40,7 +42,7 @@ const Favorites = () => {
             </Text>
           </View>
         ) : (
-          <FlatList
+          <FlashList
             data={favorites}
             renderItem={({ item }) => (
               <ProductCard

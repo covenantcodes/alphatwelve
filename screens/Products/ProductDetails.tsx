@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -19,6 +18,7 @@ import { products } from "../../data/data";
 import { RootStackParamList } from "../../utils/types";
 import { useFavorites } from "../../context/FavoritesContext";
 import { useCart } from "../../context/CartContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type ProductDetailsRouteProp = RouteProp<RootStackParamList, "ProductDetails">;
 type ProductDetailsNavigationProp = StackNavigationProp<
@@ -141,18 +141,17 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ route }) => {
       }),
     ]).start();
 
-    // Auto dismiss after 4 seconds
+    // Auto dismiss after 3 seconds (changed from 4 seconds)
     setTimeout(() => {
       if (showToast) {
         dismissToast();
       }
-    }, 4000);
+    }, 3000); // Changed from 4000 to 3000 milliseconds
   };
 
   // Navigate to cart screen
   const handleViewCart = () => {
-    // Using navigation we navigate to MainTabs screen with params to select Cart tab
-    (navigation as any).navigate("MainTabs", { screen: "Cart" });
+    (navigation as any).navigate("CartStack");
   };
 
   return (

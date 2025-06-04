@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { FONTFAMILY, FONTSIZE } from "../../utils/font";
 import colors from "../../utils/colors";
 import Header from "../../components/Header";
@@ -9,6 +9,7 @@ import { FlashList } from "@shopify/flash-list";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../utils/types";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Create a typed navigation prop
 type HomeScreenNavigationProp = StackNavigationProp<
@@ -65,7 +66,7 @@ const Home = () => {
                 image={item.image}
                 name={item.name}
                 price={item.price}
-                handlePress={() => handleProductPress(item.id)} // Pass the specific product ID
+                handlePress={() => handleProductPress(item.id)}
               />
             )}
             estimatedItemSize={240}
