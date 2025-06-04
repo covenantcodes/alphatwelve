@@ -14,6 +14,7 @@ import Profile from "../components/svgs/profile";
 import colors from "../utils/colors";
 import { FONTFAMILY, FONTSIZE } from "../utils/font";
 import { useFavorites } from "../context/FavoritesContext";
+import { useCart } from "../context/CartContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +22,14 @@ const BottomTabNavigator = () => {
   // Get favorites using the context
   const { favorites } = useFavorites();
 
+  // Get cart items count using the cart context
+  const { getItemCount } = useCart();
+
   // Badge should be visible when favorites array has items
   const favoritesCount = favorites.length;
+
+  // Get the total number of items in the cart
+  const cartItemCount = getItemCount();
 
   return (
     <Tab.Navigator
@@ -75,6 +82,14 @@ const BottomTabNavigator = () => {
                 height={24}
                 color={focused ? colors.white : colors.gray2}
               />
+              {/* Display cart badge if there are items in cart */}
+              {cartItemCount > 0 && !focused && (
+                <View style={styles.badgeContainer}>
+                  <Text style={styles.badgeText}>
+                    {cartItemCount > 9 ? "9+" : cartItemCount}
+                  </Text>
+                </View>
+              )}
             </View>
           ),
           tabBarLabel: ({ focused }) => (
@@ -185,7 +200,6 @@ const styles = StyleSheet.create({
     color: colors.secondaryColor,
     fontFamily: FONTFAMILY.semibold,
   },
-  // New styles for the badge
   badgeContainer: {
     position: "absolute",
     top: 5,
