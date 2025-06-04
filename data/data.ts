@@ -31,18 +31,19 @@ export const products = [
       details: "Apple M4 chip with 8-core CPU, 10-core GPU, and 16-core Neural Engine. ",
       price: 1000.00
     },
+ 
     {
       id: '3',
-      image: images.airpod,
-      name: "Apple Airpods 4 Active Noise Cancellation|Teal",
-      details: "Active Noise Cancellation, Transparency mode, and Adaptive Transparency",
-      price: 129.00
-    },
-    {
-      id: '4',
       image: images.pixel,
       name: "Google Pixel 9A 128GB|Iris",
       details: "The Google Pixel 9A is a smartphone that combines cutting-edge technology with a sleek design. It features a stunning 6.2-inch OLED display, powered by the latest Google Tensor G3 chip for lightning-fast performance. With 128GB of storage, you'll have plenty of space for your apps, photos, and videos. The Pixel 9A also boasts an impressive camera system, including a 50MP main sensor and a 12MP ultra-wide lens, ensuring you capture every moment in stunning detail. Plus, with its long-lasting battery and fast charging capabilities, you can stay connected all day long.",
       price: 499.00
+    },  
+     {
+      id: '4',
+      image: images.airpod,
+      name: "Apple Airpods 4 Active Noise Cancellation|Teal",
+      details: "Active Noise Cancellation, Transparency mode, and Adaptive Transparency",
+      price: 129.00
     },
   ];

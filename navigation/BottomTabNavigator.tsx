@@ -13,10 +13,17 @@ import Profile from "../components/svgs/profile";
 
 import colors from "../utils/colors";
 import { FONTFAMILY, FONTSIZE } from "../utils/font";
+import { useFavorites } from "../context/FavoritesContext";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  // Get favorites using the context
+  const { favorites } = useFavorites();
+
+  // Badge should be visible when favorites array has items
+  const favoritesCount = favorites.length;
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -95,6 +102,14 @@ const BottomTabNavigator = () => {
                 height={24}
                 color={focused ? colors.white : colors.gray2}
               />
+              {/* Display badge if there are favorites */}
+              {favoritesCount > 0 && !focused && (
+                <View style={styles.badgeContainer}>
+                  <Text style={styles.badgeText}>
+                    {favoritesCount > 9 ? "9+" : favoritesCount}
+                  </Text>
+                </View>
+              )}
             </View>
           ),
           tabBarLabel: ({ focused }) => (
@@ -154,6 +169,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent: "center",
+    position: "relative",
   },
   activeTabBackground: {
     backgroundColor: colors.secondaryColor,
@@ -168,6 +184,24 @@ const styles = StyleSheet.create({
   activeTabLabel: {
     color: colors.secondaryColor,
     fontFamily: FONTFAMILY.semibold,
+  },
+  // New styles for the badge
+  badgeContainer: {
+    position: "absolute",
+    top: 5,
+    right: 15,
+    backgroundColor: colors.gray7,
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    color: colors.white,
+    fontSize: 10,
+    fontFamily: FONTFAMILY.bold,
   },
 });
 
