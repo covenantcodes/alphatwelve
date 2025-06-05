@@ -165,11 +165,11 @@ const Profile = () => {
         </Animated.View>
 
         <Animated.Text style={[styles.userName, { opacity: contentOpacity }]}>
-          John Doe
+          Covenant Ifeoluwa
         </Animated.Text>
 
         <Animated.Text style={[styles.userEmail, { opacity: contentOpacity }]}>
-          john.doe@example.com
+          covenantcodes@gmail.com
         </Animated.Text>
       </Animated.View>
 
