@@ -4,7 +4,6 @@ A modern and intuitive React Native e-commerce application with elegant animatio
 
 ## 📱 Features
 
-- User authentication and ID verification
 - Smooth Animation System: Engaging micro-interactions and transitions across all screens
 - Product Catalog: Browse products with responsive grid layout
 - Product Details: Comprehensive product information with images and specifications
