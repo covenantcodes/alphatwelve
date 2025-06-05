@@ -14,7 +14,7 @@ A modern and intuitive React Native e-commerce application with elegant animatio
 
 - React Native: Cross-platform mobile application development
 - Expo: Streamlined development workflow
-- **TypeScript: : Type safety for robust development**
+- TypeScript: : Type safety for robust development
 - React Navigation: Tab and stack navigation system
 - Animated API: Native animations with performance optimizations
 - Context API: State management for cart and favorites
